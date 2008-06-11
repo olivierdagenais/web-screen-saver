@@ -1,0 +1,192 @@
+<html>
+	<head>
+		<meta http-equiv="refresh" content="2000" />
+		<title>Aviation Weather Electronic Summary Of Major Events</title>
+		<script language="javascript">
+		<!--
+			// parameters
+			var seconds_per_page = 2 * 60;
+
+			// state variables
+			var num_pages = 0;
+			var current_page = 0;
+			var pages = new Array();
+			function body_load()
+			{
+				// TODO: set a random background-image on body
+				var body = document.getElementById('body');
+				var potential_pages = body.childNodes;
+				for ( var c = 0; c < potential_pages.length; c++ )
+				{
+					var node = potential_pages[c];
+					if ( node.nodeName != '#text' )
+					{
+						pages.push(node)
+						num_pages++;
+					}
+				}
+				body_resize();
+				if ( num_pages > 0 )
+				{
+					current_page = num_pages - 1;
+					cycle();
+				}
+			}
+
+			function body_resize()
+			{
+				// hide everything, so we can measure the best display area
+				for ( var c = 0; c < num_pages; c++ )
+				{
+					var node = pages[c];
+					node.style.display = 'none';
+				}
+
+				// measure display area
+				var height = body.clientHeight;
+				var width = body.clientWidth;
+				// http://www.javascriptkit.com/javatutors/ns6update.shtml
+				// if Firefox or NS6+
+				if ( document.getElementById && !document.all )
+				{
+					// compensate for the vertical scrollbar
+					// TODO: 16 works on my computer, but Windows allows users
+					// to configure the size/width of scrollbars for
+					// accessibility purposes and thus we would need a better
+					// way to detecct
+					width -= 16;
+				}
+
+				// resize and show everything
+				for ( var c = 0; c < num_pages; c++ )
+				{
+					var node = pages[c];
+					node.style.height = height + "px";
+					node.style.width = width + "px";
+					node.style.overflowX = "hidden";
+					node.style.overflowY = "hidden";
+					node.style.display = 'block';
+				}
+				body.scrollTop = height * current_page;
+			}
+
+			function cycle()
+			{
+				inner_cycle(1);
+				window.setTimeout(cycle, seconds_per_page * 1000);
+			}
+
+			function inner_cycle(direction)
+			{
+				// TODO: this is a fixed cycle, but the user could jump back
+				// or ahead and may want to resume from there.  We could
+				// determine the current_page based on
+				// body.scrollTop MOD clientHeight
+				// and continue from there.
+				current_page += direction;
+				if ( current_page == num_pages )
+				{
+					current_page = 0;
+				}
+				else if ( current_page < 0 )
+				{
+					current_page = num_pages - 1;
+				}
+				var body = document.getElementById('body');
+				body.scrollTop = body.clientHeight * current_page;
+			}
+
+			function body_key(evt)
+			{
+				evt = (evt) ? evt : ((window.event) ? window.event : "")
+				if (evt)
+				{
+					switch(evt.keyCode)
+					{
+						case 8:		// backspace
+						case 37:	// left
+							inner_cycle(-1);
+							evt.cancelBubble = true;
+							break;
+						case 32:	// space
+						case 39:	// right
+							inner_cycle(1);
+							evt.cancelBubble = true;
+							break;
+					}
+				}
+			}
+		// -->
+		</script>
+	</head>
+	<body id="body"
+		style="margin: 0; height: 100%; width: 100%;"
+		onload="body_load()"
+		onkeyup="body_key(event)"
+		onresize="body_resize()">
+		<div>
+			<img
+				alt="GFA - Clouds and weather + 00hr"
+				src="http://www.flightplanning.navcanada.ca/Latest/gfa/anglais/produits/uprair/gfa/gfacn33/Latest-gfacn33_cldwx_000.png" />
+		</div>
+		<div>
+			<img
+				alt="GFA - Turbulence, Icing and Freezing level forecasts + 00hr"
+				src="http://www.flightplanning.navcanada.ca/Latest/gfa/anglais/produits/uprair/gfa/gfacn33/Latest-gfacn33_turbc_000.png" />
+		</div>
+		<div>
+			<img
+				alt="SATELLITE VISIBLE - East Canada"
+				src="http://www.flightplanning.navcanada.ca/Latest/anglais/produits/sat/goes/ecan/vis/Latest-goes_ecan_vis.jpg" />
+		</div>
+		<div>
+			<img
+				alt="SATELLITE INFRARED - East Canada"
+				src="http://www.flightplanning.navcanada.ca/Latest/anglais/produits/sat/goes/ecan/ir/Latest-goes_ecan_1070.jpg" />
+		</div>
+		<div>
+			<img
+				alt="UPR WINDS - FL030"
+				src="http://www.flightplanning.navcanada.ca/Latest/fd/produits/uprair/fd/fdcn0/graph/Latest-EST_FL030_00.png" />
+		</div>
+		<div>
+			<iframe
+				height="100%"
+				width="100%"
+				scrolling="no"
+				align="top"
+				frameborder="0"
+				allowtransparency="true"
+				src="http://www.flightplanning.navcanada.ca/cgi-bin/Fore-obs/metar.cgi?format=raw&Langue=anglais&Region=can&Stations=CYOW">
+				 RAW METAR/TAF for OTTAWA/MACDONALD-CARTIER INTL/ON
+			</iframe>
+		</div>
+		<div>
+			<iframe
+				height="100%"
+				width="100%"
+				scrolling="no"
+				align="top"
+				frameborder="0"
+				allowtransparency="true"
+				src="https://fileflightplan.navcanada.ca/aniw_ns.html">
+				AWWS News
+			</iframe>
+		</div>
+		<div>
+			<img
+				alt="Observed Flight Conditions - GFA33"
+				src="http://www.flightplanning.navcanada.ca/convol/mtrimg/GFA33-mtr.png" />
+		</div>
+		<div>
+			<img
+				alt="Today's forecast - NOAA"
+				src="http://www.hpc.ncep.noaa.gov/noaa/noaa.gif" />
+		</div>
+		<div>
+			<img
+				alt="Current Surface Analyses - Continental U.S. (CONUS) - Without Surface Observations"
+				src="http://www.hpc.ncep.noaa.gov/sfc/usfntsfcwbg.gif" />
+		</div>
+	</body>
+</html>
