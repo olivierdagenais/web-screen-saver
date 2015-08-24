@@ -1,0 +1,1 @@
+Handy for cycling through frequently-updating content (like weather reports) on an old computer.
